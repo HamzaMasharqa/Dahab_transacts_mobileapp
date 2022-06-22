@@ -1,8 +1,12 @@
 
+import 'dart:collection';
+
 import 'package:first_app/mysql.dart';
 import 'package:first_app/mysql.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
+
+import 'add.dart';
 
 
 
@@ -17,23 +21,37 @@ class IndexPage extends StatefulWidget {
 
 class _IndexPageState extends State<IndexPage> {
   var db = Mysql();
-  var id = '';
-  void getid() {
+  var arr=[];
+
+
+  void initState(){
+    super.initState();
+    this.getid();
+  }
+  void getid() async{
     db.getConnection().then((conn) {
-      String sql = 'select AccName from dahabac.accounts where accno = 3;';
+      String sql = 'select * from dahabac.transacts ;';
       conn.query(sql).then((results) {
+
+
+
         for(var raw in results){
+          var x = 0;
           setState(() {
-            id = raw[0];
+            arr.add(raw.fields);
+
+                x = x+1;
+
           });
 
+
         }
+
 
       });
 
     });
   }
-
 
 @override
   Widget build(BuildContext context) {
@@ -120,7 +138,12 @@ class _IndexPageState extends State<IndexPage> {
 
 
       floatingActionButton: FloatingActionButton(
-        onPressed: getid,
+        onPressed:  () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const addingPage()),
+          );
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma mak
@@ -128,31 +151,37 @@ class _IndexPageState extends State<IndexPage> {
 
   }
   Widget getBody(){
-return ListView.builder(itemBuilder: (context, index) {
-  return CardItem();
+
+    return ListView.builder(
+    itemCount: arr.length,
+    itemBuilder: (context, index) {
+  return CardItem(arr[index]);
 });
   }
-  Widget CardItem(){
+  Widget CardItem(item){
+var transacrNO = item['trano'].toString();
+
+var transacrDet = item['TraDetails'];
+
     return Card(
       child: Slidable(
         // Specify a key if the Slidable is dismissible.
 
         // The start action pane is the one at the left or the top side.
-        startActionPane: ActionPane(
+        startActionPane: const ActionPane(
           // A motion is a widget used to control how the pane animates.
-          motion: const ScrollMotion(),
+          motion: ScrollMotion(),
 
-          // A pane can dismiss the Slidable.
-          dismissible: DismissiblePane(onDismissed: () {}),
 
           // All actions are defined in the children parameter.
-          children: const [
+          children: [
             // A SlidableAction can have an icon and/or a label.
             SlidableAction(
               onPressed: null,
               backgroundColor: Color(0xFFFE4A49),
               foregroundColor: Colors.white,
               icon: Icons.delete,
+
               label: 'Delete',
             ),
             SlidableAction(
@@ -190,11 +219,24 @@ return ListView.builder(itemBuilder: (context, index) {
 
         // The child of the Slidable is what the user sees when the
         // component is not dragged.
-        child:Container(child: const ListTile(title: Text('Slide hello'),),)
+        child:Container(child:  ListTile(
+          subtitle: Text(transacrNO),
+          title: Text(transacrDet),),)
 
 
       ),
     );
+  }
+
+
+  deleTransact(){
+
+
+    print('user deleted');
+
+
+
+
   }
 }
 
