@@ -1,4 +1,5 @@
 import 'package:first_app/pages/index.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class addingPage extends StatelessWidget {
@@ -6,25 +7,77 @@ class addingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Directionality(textDirection: TextDirection.ltr, child: Scaffold(
       appBar: AppBar(
-        title: const Text('Second Route'),
+        title: const Text('Add Transact'),
+
+
       ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) =>  IndexPage()),
-            );
-          },
-          child: const TextField(
+      body: ListView(
+          children: <Widget>[
+
+
+        Form(
+            padding: const EdgeInsets.only(top: 10),
+            child:Column(
+
+          children: <Widget>[
+
+          TextFormField(
             decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              hintText: 'Enter a search term',
-            ),
+                contentPadding: EdgeInsets.all(20.0),
+
+                hintText: "ent" ,fillColor: Colors.white,border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
+
           ),
-        ),
-      ),
-    );  }
+          TextFormField(
+            decoration: InputDecoration(hintText: "ent" ,fillColor: Colors.white,border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
+
+          ),
+          TextFormField(
+            decoration: InputDecoration(hintText: "ent" ,fillColor: Colors.white,border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
+
+          ),
+          TextFormField(
+            decoration: InputDecoration(hintText: "ent" ,fillColor: Colors.white,border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
+
+          ),
+          TextFormField(
+            decoration: InputDecoration(hintText: "ent" ,fillColor: Colors.white,border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
+
+          ),
+          TextFormField(
+            decoration: InputDecoration(hintText: "ent" ,fillColor: Colors.white,border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
+
+          ),
+          TextFormField(
+            decoration: InputDecoration(hintText: "ent" ,fillColor: Colors.white,border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
+
+          ),
+          TextFormField(
+            decoration: InputDecoration(hintText: "ent" ,fillColor: Colors.white,border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
+
+          ),
+          TextFormField(
+            decoration: InputDecoration(hintText: "ent" ,fillColor: Colors.white,border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
+
+          ),
+          TextFormField(
+            decoration: InputDecoration(hintText: "ent" ,fillColor: Colors.white,border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
+
+          ),
+          TextFormField(
+            decoration: InputDecoration(hintText: "ent" ,fillColor: Colors.white,border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
+
+          ),
+          TextFormField(
+            decoration: InputDecoration(hintText: "ent" ,fillColor: Colors.white,border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
+
+          ),
+        ],))
+      ])
+
+    ));
+  }
+
 }
