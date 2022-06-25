@@ -41,7 +41,6 @@ class _IndexPageState extends State<IndexPage> {
             arr.add(raw.fields);
 
                 x = x+1;
-
           });
 
 
