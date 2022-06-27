@@ -1,5 +1,4 @@
 import 'package:date_field/date_field.dart';
-import 'package:first_app/pages/index.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -17,44 +16,45 @@ class _addingPageState extends State<addingPage> {
 
   var db = Mysql();
   var arr=[];
-var items=[];
+ List items=[];
 
+  @override
   void initState(){
     super.initState();
-    this.getid();
+    items = getid();
   }
-  void getid() async {
+  getid() async {
 
     db.getConnection().then((conn) {
       String sql = 'select * from dahabac.doctypes ;';
       conn.query(sql).then((results) {
+        var x = 0;
+
         for (var raw in results) {
-          var x = 0;
           setState(() {
             arr.add(raw.fields);
-            x = x + 1;
-
 
           });
+
+
+          x++;
+
         }
+        var d = 0;
         for(var i in arr) {
 
-          items.add(arr[i]["DocType"].toString());
-          print(items[i].toString());
-
+          items.add(arr[d]["DocType"].toString());
+          print(arr[d]["DocType"].toString());
+          d++;
         }
+
       });
 
     });
+
+return items;
+
   }
-
-
-
-
-
-
-
-
 
   String dropdownValue = 'One';
   TextEditingController intialdateval = TextEditingController();
@@ -75,7 +75,7 @@ var items=[];
 
                     children: <Widget>[
                       Padding(
-                        padding: EdgeInsets.only(top: 25.0),
+                        padding: const EdgeInsets.only(top: 25.0),
                         child:  DateTimeFormField(
                           decoration: const InputDecoration(
                             hintStyle: TextStyle(color: Colors.black45),
@@ -96,18 +96,18 @@ var items=[];
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 25.0),
-                        child: new TextFormField(
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: TextFormField(
                           keyboardType: TextInputType.number,
-                          decoration: new InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                              labelText: 'Vouture Number',
-                              contentPadding: new EdgeInsets.only(bottom: 1.0)),
+                          decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                              labelText: 'Future Number',
+                              contentPadding: const EdgeInsets.only(bottom: 1.0)),
 
-                          // onSaved: (value) => _email = value,
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 25.0),
+
+                        padding: const EdgeInsets.only(top: 25.0),
                         child: DropdownButton<String>(
                           value: dropdownValue,
                           icon: const Icon(Icons.arrow_downward),
@@ -119,6 +119,7 @@ var items=[];
                           onChanged: (String? newValue) {
                             setState(() {
                               dropdownValue = newValue!;
+                              print(items);
                             });
                           },
                           items: <String>['One', 'Two', 'asdasdasdaasdasdasd', 'Four']
@@ -131,100 +132,93 @@ var items=[];
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 25.0),
-                        child: new TextFormField(
-                          decoration: new InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.only(top: 25.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                               labelText: 'E-Mail',
-                              contentPadding: new EdgeInsets.only(bottom: 1.0)),
+                              contentPadding: const EdgeInsets.only(bottom: 1.0)),
 
-                          // onSaved: (value) => _email = value,
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 25.0),
-                        child: new TextFormField(
-                          decoration: new InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                               labelText: 'E-Mail',
-                              contentPadding: new EdgeInsets.only(bottom: 1.0)),
+                              contentPadding: const EdgeInsets.only(bottom: 1.0)),
 
-                          // onSaved: (value) => _email = value,
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 25.0),
-                        child: new TextFormField(
-                          decoration: new InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                               labelText: 'E-Mail',
-                              contentPadding: new EdgeInsets.only(bottom: 1.0)),
+                              contentPadding: const EdgeInsets.only(bottom: 1.0)),
 
-                          // onSaved: (value) => _email = value,
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 25.0),
-                        child: new TextFormField(
-                          decoration: new InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                               labelText: 'E-Mail',
-                              contentPadding: new EdgeInsets.only(bottom: 1.0)),
+                              contentPadding: const EdgeInsets.only(bottom: 1.0)),
 
-                          // onSaved: (value) => _email = value,
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 25.0),
-                        child: new TextFormField(
-                          decoration: new InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                               labelText: 'Vouture Number',
-                              contentPadding: new EdgeInsets.only(bottom: 1.0)),
+                              contentPadding: const EdgeInsets.only(bottom: 1.0)),
 
                           // onSaved: (value) => _email = value,
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 25.0),
-                        child: new TextFormField(
-                          decoration: new InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                               labelText: 'E-Mail',
-                              contentPadding: new EdgeInsets.only(bottom: 1.0)),
+                              contentPadding: const EdgeInsets.only(bottom: 1.0)),
 
-                          // onSaved: (value) => _email = value,
                         ),
                       ),Padding(
-                        padding: EdgeInsets.only(top: 25.0),
-                        child: new TextFormField(
-                          decoration: new InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                               labelText: 'E-Mail',
-                              contentPadding: new EdgeInsets.only(bottom: 1.0)),
+                              contentPadding: const EdgeInsets.only(bottom: 1.0)),
+
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                              labelText: 'E-Mail',
+                              contentPadding: const EdgeInsets.only(bottom: 1.0)),
+
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                              labelText: 'E-Mail',
+                              contentPadding: const EdgeInsets.only(bottom: 1.0)),
 
                           // onSaved: (value) => _email = value,
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 25.0),
-                        child: new TextFormField(
-                          decoration: new InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                               labelText: 'E-Mail',
-                              contentPadding: new EdgeInsets.only(bottom: 1.0)),
-
-                          // onSaved: (value) => _email = value,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 25.0),
-                        child: new TextFormField(
-                          decoration: new InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                              labelText: 'E-Mail',
-                              contentPadding: new EdgeInsets.only(bottom: 1.0)),
-
-                          // onSaved: (value) => _email = value,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 25.0),
-                        child: new TextFormField(
-                          decoration: new InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                              labelText: 'E-Mail',
-                              contentPadding: new EdgeInsets.only(bottom: 1.0)),
+                              contentPadding: const EdgeInsets.only(bottom: 1.0)),
 
                           // onSaved: (value) => _email = value,
                         ),
