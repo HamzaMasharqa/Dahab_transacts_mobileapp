@@ -1,22 +1,15 @@
-import 'package:mysql1/mysql1.dart';
+import 'dart:convert';
 
+import 'package:http/http.dart' as http;
 class Mysql {
-  static String host = '172.16.0.88',
-      user = 'admin',
-      password = 'admin',
-      db = 'dahabac';
-  static int port = 3306;
-
   Mysql();
+  var response=[];
 
-  Future<MySqlConnection> getConnection() async {
-    var settings = new ConnectionSettings(
-        host: host,
-        port: port,
-        user: user,
-        password: password,
-        db: db
-    );
-    return await MySqlConnection.connect(settings);
+   getdata() async {
+
+
+    print(response);
+return response;
   }
-}
+  }
+

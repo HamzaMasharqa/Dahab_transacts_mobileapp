@@ -1,6 +1,4 @@
-import 'package:first_app/mysql.dart';
 import 'package:first_app/pages/index.dart';
-import 'package:first_app/theme/theme_colors.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(

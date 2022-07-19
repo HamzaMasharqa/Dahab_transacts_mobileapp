@@ -13,50 +13,49 @@ class addingPage extends StatefulWidget {
 }
 
 class _addingPageState extends State<addingPage> {
+   var selectedDoc ;
+   var selectedCurType ;
 
   var db = Mysql();
   var arr=[];
- List items=[];
+  List Docs= [];
+   List Curs= [];
 
-  @override
+   @override
   void initState(){
     super.initState();
-    items = getid();
+
   }
-  getid() async {
 
-    db.getConnection().then((conn) {
+
+
+
+
+  Future<List> getDoc() async {
+
+    db.getdata().then((conn) {
       String sql = 'select * from dahabac.doctypes ;';
-      conn.query(sql).then((results) {
-        var x = 0;
 
-        for (var raw in results) {
-          setState(() {
-            arr.add(raw.fields);
-
-          });
-
-
-          x++;
-
-        }
-        var d = 0;
-        for(var i in arr) {
-
-          items.add(arr[d]["DocType"].toString());
-          print(arr[d]["DocType"].toString());
-          d++;
-        }
-
-      });
 
     });
 
-return items;
+    return Docs;
+
 
   }
+   Future<List> getCurType() async {
 
-  String dropdownValue = 'One';
+     db.getdata().then((conn) {
+       String sql = 'select * from dahabac.currencies ;';
+
+
+     });
+
+     return Curs;
+
+
+   }
+
   TextEditingController intialdateval = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -91,7 +90,6 @@ return items;
                           validator: (DateTime? e) =>
                           (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
                           onDateSelected: (DateTime value) {
-                            print(value);
                           },
                         ),
                       ),
@@ -106,10 +104,36 @@ return items;
                         ),
                       ),
                       Padding(
-
                         padding: const EdgeInsets.only(top: 25.0),
+                        child:
+                        FutureBuilder<List>(
+                          future: getCurType(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return DropdownButton(
+                                isExpanded: true,
+
+                                value: selectedDoc,
+                                items: snapshot.data?.map((category) {
+                                  return DropdownMenuItem(
+                                    value: category["DocType"],
+                                    child: Text(category["DocType"]),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedDoc = value;
+                                  });
+                                },
+                              );
+                            }
+                            return Center(child: CircularProgressIndicator());
+                          },
+                        ),
+
+
+                        /*  padding: const EdgeInsets.only(top: 25.0),
                         child: DropdownButton<String>(
-                          value: dropdownValue,
                           icon: const Icon(Icons.arrow_downward),
                           elevation: 16,
                           underline: Container(
@@ -119,32 +143,84 @@ return items;
                           onChanged: (String? newValue) {
                             setState(() {
                               dropdownValue = newValue!;
-                              print(items);
                             });
                           },
-                          items: <String>['One', 'Two', 'asdasdasdaasdasdasd', 'Four']
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
+                          items: items.map((Category){
+                            value: Category["DocType"],
+
+                            return DropdownMenuItem(child: Text("DocType")).
+
+                          }).toList();
+                        ),*/
+
+
                       ),
                       Padding(
                     padding: const EdgeInsets.only(top: 25.0),
                         child: TextFormField(
                           decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                              labelText: 'E-Mail',
+                              labelText: 'Transact details',
                               contentPadding: const EdgeInsets.only(bottom: 1.0)),
 
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 25.0),
+                        child:
+                        FutureBuilder<List>(
+                          future: getDoc(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return DropdownButton(
+                                isExpanded: true,
+
+                                value: selectedCurType,
+                                items: snapshot.data?.map((category) {
+                                  return DropdownMenuItem(
+                                    value: category["CurrencyName"],
+                                    child: Text(category["CurrencyName"]),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedCurType = value;
+                                  });
+                                },
+                              );
+                            }
+                            return Center(child: CircularProgressIndicator());
+                          },
+                        ),
+
+
+                        /*  padding: const EdgeInsets.only(top: 25.0),
+                        child: DropdownButton<String>(
+                          icon: const Icon(Icons.arrow_downward),
+                          elevation: 16,
+                          underline: Container(
+                            height: 2,
+                            color: Colors.amber,
+                          ),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              dropdownValue = newValue!;
+                            });
+                          },
+                          items: items.map((Category){
+                            value: Category["DocType"],
+
+                            return DropdownMenuItem(child: Text("DocType")).
+
+                          }).toList();
+                        ),*/
+
+
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 25.0),
                         child: TextFormField(
                           decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                              labelText: 'E-Mail',
+                              labelText: 'Currency Price',
                               contentPadding: const EdgeInsets.only(bottom: 1.0)),
 
                         ),

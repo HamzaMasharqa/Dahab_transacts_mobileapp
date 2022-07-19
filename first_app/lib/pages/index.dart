@@ -1,11 +1,9 @@
 
-import 'dart:collection';
-
-import 'package:first_app/mysql.dart';
+import 'dart:convert';
 import 'package:first_app/mysql.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
 import 'add.dart';
 
 
@@ -15,7 +13,7 @@ import 'add.dart';
 
 class IndexPage extends StatefulWidget {
 
-  @override
+@override
   _IndexPageState createState() => _IndexPageState();
 }
 
@@ -23,45 +21,52 @@ class _IndexPageState extends State<IndexPage> {
   var db = Mysql();
   var arr=[];
 
+  var response=[];
 
+
+  @override
   void initState(){
+    this.gettrans();
+
     super.initState();
-    this.getid();
-  }
-  void getid() async{
-    db.getConnection().then((conn) {
-      String sql = 'select * from dahabac.transacts ;';
-      conn.query(sql).then((results) {
 
-
-
-        for(var raw in results){
-          var x = 0;
-          setState(() {
-            arr.add(raw.fields);
-
-                x = x+1;
-          });
-
-
-        }
-
-
-      });
-
-    });
   }
 
+  void   gettrans() async{
+    var url = "http://172.16.0.22/flutter_php/gettrans.php?i=0";
+    var result = await http.get(Uri.parse(url));
+    response = jsonDecode(result.body);
+  }
 @override
   Widget build(BuildContext context) {
-
     return Scaffold(
 
       appBar: AppBar(
 
+
+
         title: Text("Hello"),
+        actions: <Widget>[
+      IconButton(
+      icon: const Icon(
+        Icons.refresh,
+        color: Colors.black,
+      ),
+      onPressed: () {
+        Future.delayed(Duration(seconds: 2));
+        print("Hi");
+        setState(() {
+          this.gettrans();
+
+        });
+      },),
+
+        ],
+
 
       ),
+
+
       drawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
         // through the options in the drawer if there isn't enough vertical
@@ -133,6 +138,7 @@ class _IndexPageState extends State<IndexPage> {
           ],
         ),
       ) ,
+
       body: getBody(),
 
 
@@ -145,16 +151,15 @@ class _IndexPageState extends State<IndexPage> {
         },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), // This trailing comma mak
+      ),
     );
-
   }
   Widget getBody(){
 
     return ListView.builder(
-    itemCount: arr.length,
+    itemCount: response.length,
     itemBuilder: (context, index) {
-  return CardItem(arr[index]);
+  return CardItem(response[index]);
 });
   }
   Widget CardItem(item){
