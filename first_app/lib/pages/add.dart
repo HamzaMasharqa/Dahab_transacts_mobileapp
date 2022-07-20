@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:date_field/date_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import '../mysql.dart';
 
@@ -15,11 +18,13 @@ class addingPage extends StatefulWidget {
 class _addingPageState extends State<addingPage> {
    var selectedDoc ;
    var selectedCurType ;
+   var selectedProject ;
 
   var db = Mysql();
   var arr=[];
   List Docs= [];
    List Curs= [];
+   List pros= [];
 
    @override
   void initState(){
@@ -33,10 +38,11 @@ class _addingPageState extends State<addingPage> {
 
   Future<List> getDoc() async {
 
-    db.getdata().then((conn) {
-      String sql = 'select * from dahabac.doctypes ;';
-
-
+    var url = "http://172.16.0.22/flutter_php/gettrans.php?i=1";
+    var result = await http.get(Uri.parse(url));
+  var  resBody=(jsonDecode(result.body)as List) ;
+    setState(() {
+    Docs = resBody;
     });
 
     return Docs;
@@ -45,86 +51,142 @@ class _addingPageState extends State<addingPage> {
   }
    Future<List> getCurType() async {
 
-     db.getdata().then((conn) {
-       String sql = 'select * from dahabac.currencies ;';
+     var url = "http://172.16.0.22/flutter_php/gettrans.php?i=2";
+     var result = await http.get(Uri.parse(url));
+     var resBody=(jsonDecode(result.body)as List) ;
 
-
+     setState(() {
+       Curs = resBody;
      });
-
      return Curs;
 
 
    }
 
+   Future<List> getProject() async {
+
+     var url = "http://172.16.0.22/flutter_php/gettrans.php?i=3";
+     var result = await http.get(Uri.parse(url));
+     var resBody=(jsonDecode(result.body)as List) ;
+
+     setState(() {
+       pros = resBody;
+     });
+     return pros;
+
+
+   }
+
+
+
+
+
+
+
+
+
+
   TextEditingController intialdateval = TextEditingController();
   @override
   Widget build(BuildContext context) {
+
     return Directionality(textDirection: TextDirection.rtl, child: Scaffold(
         appBar: AppBar(
           title: const Text('Add Transact'),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(
 
+                Icons.refresh,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => addingPage()), // this mymainpage is your page to refresh
+                      (Route<dynamic> route) => false,
+                );
+                Future.delayed(Duration(seconds: 2));
+                print("Hi");
+
+                setState(() {
+                  this.getDoc();
+                  this.getCurType();
+                  this.getProject();
+                });
+
+              },),
+
+          ],
 
         ),
         body: ListView(
+            padding: EdgeInsets.all(8),
+
             children: <Widget>[
 
 
               Form(
+
                   child:Column(
 
                     children: <Widget>[
+
                       Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
+
+                        padding: const EdgeInsets.all(8),
                         child:  DateTimeFormField(
                           decoration: const InputDecoration(
                             hintStyle: TextStyle(color: Colors.black45),
                             errorStyle: TextStyle(color: Colors.redAccent),
                             border: OutlineInputBorder(),
                             suffixIcon: Icon(Icons.event_note),
-                            labelText: 'My Super Date Time Field',
+                            labelText: 'Transact Date',
                           ),
                           firstDate: DateTime.now().add(const Duration(days: 10)),
                           lastDate: DateTime.now().add(const Duration(days: 40)),
                           initialDate: DateTime.now().add(const Duration(days: 20)),
                           autovalidateMode: AutovalidateMode.always,
-                          validator: (DateTime? e) =>
-                          (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
+
                           onDateSelected: (DateTime value) {
                           },
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
+                        padding: const EdgeInsets.all(8),
                         child: TextFormField(
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                              labelText: 'Future Number',
-                              contentPadding: const EdgeInsets.only(bottom: 1.0)),
+                              labelText: 'Vou Number',
+                              contentPadding: const EdgeInsets.all(8)),
 
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
+                        padding: const EdgeInsets.all(8),
                         child:
                         FutureBuilder<List>(
                           future: getCurType(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
-                              return DropdownButton(
+                              return DropdownButton<String>(
                                 isExpanded: true,
+                                hint: const Text("Document Type "),
 
-                                value: selectedDoc,
-                                items: snapshot.data?.map((category) {
-                                  return DropdownMenuItem(
+                                items: Docs.map((category) {
+                                  return DropdownMenuItem<String>(
                                     value: category["DocType"],
                                     child: Text(category["DocType"]),
                                   );
                                 }).toList(),
-                                onChanged: (value) {
+                                onChanged: (String? value) {
                                   setState(() {
-                                    selectedDoc = value;
+                                    print(value);
+                                    selectedDoc = value!;
                                   });
                                 },
+                                value: selectedDoc,
+
                               );
                             }
                             return Center(child: CircularProgressIndicator());
@@ -156,36 +218,43 @@ class _addingPageState extends State<addingPage> {
 
                       ),
                       Padding(
-                    padding: const EdgeInsets.only(top: 25.0),
+                    padding: const EdgeInsets.all(8),
                         child: TextFormField(
                           decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                               labelText: 'Transact details',
-                              contentPadding: const EdgeInsets.only(bottom: 1.0)),
+                              contentPadding: const EdgeInsets.all(8)),
 
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
+                        padding: const EdgeInsets.all(8),
                         child:
                         FutureBuilder<List>(
+
                           future: getDoc(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
-                              return DropdownButton(
+                              return DropdownButton<String>(
                                 isExpanded: true,
+                                hint: const Text("Currency Name"),
 
-                                value: selectedCurType,
-                                items: snapshot.data?.map((category) {
-                                  return DropdownMenuItem(
+                                items: Curs.map((category) {
+                                  return DropdownMenuItem<String>(
+
                                     value: category["CurrencyName"],
                                     child: Text(category["CurrencyName"]),
                                   );
                                 }).toList(),
-                                onChanged: (value) {
+                                onChanged: (String? value) {
                                   setState(() {
+                                    print(value!);
+
                                     selectedCurType = value;
                                   });
+
                                 },
+                                value: selectedCurType,
+
                               );
                             }
                             return Center(child: CircularProgressIndicator());
@@ -217,92 +286,70 @@ class _addingPageState extends State<addingPage> {
 
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
+                        padding: const EdgeInsets.all(8),
                         child: TextFormField(
+                          keyboardType: TextInputType.number,
+
                           decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                               labelText: 'Currency Price',
-                              contentPadding: const EdgeInsets.only(bottom: 1.0)),
+                              contentPadding: const EdgeInsets.all(8)),
 
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
-                        child: TextFormField(
-                          decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                              labelText: 'E-Mail',
-                              contentPadding: const EdgeInsets.only(bottom: 1.0)),
+                        padding: const EdgeInsets.all(8),
+                        child:
+                        FutureBuilder<List>(
+                          future: getProject(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return DropdownButton<String>(
+                                isExpanded: true,
+                                hint: const Text("Project Name "),
 
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
-                        child: TextFormField(
-                          decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                              labelText: 'E-Mail',
-                              contentPadding: const EdgeInsets.only(bottom: 1.0)),
+                                items: pros.map((category) {
+                                  return DropdownMenuItem<String>(
+                                    value: category["projectname"],
+                                    child: Text(category["projectname"]),
+                                  );
+                                }).toList(),
+                                onChanged: (String? value) {
+                                  setState(() {
+                                    print(value!);
 
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
-                        child: TextFormField(
-                          decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                              labelText: 'Vouture Number',
-                              contentPadding: const EdgeInsets.only(bottom: 1.0)),
+                                    selectedProject = value;
+                                  });
 
-                          // onSaved: (value) => _email = value,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
-                        child: TextFormField(
-                          decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                              labelText: 'E-Mail',
-                              contentPadding: const EdgeInsets.only(bottom: 1.0)),
+                                },
+                                value: selectedProject,
 
-                        ),
-                      ),Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
-                        child: TextFormField(
-                          decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                              labelText: 'E-Mail',
-                              contentPadding: const EdgeInsets.only(bottom: 1.0)),
-
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
-                        child: TextFormField(
-                          decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                              labelText: 'E-Mail',
-                              contentPadding: const EdgeInsets.only(bottom: 1.0)),
-
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
-                        child: TextFormField(
-                          decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                              labelText: 'E-Mail',
-                              contentPadding: const EdgeInsets.only(bottom: 1.0)),
-
-                          // onSaved: (value) => _email = value,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
-                        child: TextFormField(
-                          decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                              labelText: 'E-Mail',
-                              contentPadding: const EdgeInsets.only(bottom: 1.0)),
-
-                          // onSaved: (value) => _email = value,
+                              );
+                            }
+                            return Center(child: CircularProgressIndicator());
+                          },
                         ),
                       ),
 
 
 
-                    ],))
+
+
+                      FloatingActionButton(
+                        // When the user presses the button, show an alert dialog containing
+                        // the text that the user has entered into the text field.
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                content: Text("Hello"),
+                              );
+                            },
+                          );
+                        },
+                        tooltip: 'Show me the value!',
+                        child: const Icon(Icons.text_fields),
+                      ),  ],))
             ])
 
     ));
