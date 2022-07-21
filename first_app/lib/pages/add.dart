@@ -18,7 +18,13 @@ class addingPage extends StatefulWidget {
 class _addingPageState extends State<addingPage> {
    var selectedDoc ;
    var selectedCurType ;
+   var selectedDateTime ;
+
    var selectedProject ;
+   final voucontroller = TextEditingController();
+   final traDetcontroller = TextEditingController();
+   final curpcontroller = TextEditingController();
+
 
   var db = Mysql();
   var arr=[];
@@ -38,7 +44,7 @@ class _addingPageState extends State<addingPage> {
 
   Future<List> getDoc() async {
 
-    var url = "http://172.16.0.22/flutter_php/gettrans.php?i=1";
+    var url = "http://172.16.0.22/flutter_php/getInfo.php?i=1";
     var result = await http.get(Uri.parse(url));
   var  resBody=(jsonDecode(result.body)as List) ;
     setState(() {
@@ -51,7 +57,7 @@ class _addingPageState extends State<addingPage> {
   }
    Future<List> getCurType() async {
 
-     var url = "http://172.16.0.22/flutter_php/gettrans.php?i=2";
+     var url = "http://172.16.0.22/flutter_php/getInfo.php?i=2";
      var result = await http.get(Uri.parse(url));
      var resBody=(jsonDecode(result.body)as List) ;
 
@@ -65,7 +71,7 @@ class _addingPageState extends State<addingPage> {
 
    Future<List> getProject() async {
 
-     var url = "http://172.16.0.22/flutter_php/gettrans.php?i=3";
+     var url = "http://172.16.0.22/flutter_php/getInfo.php?i=3";
      var result = await http.get(Uri.parse(url));
      var resBody=(jsonDecode(result.body)as List) ;
 
@@ -78,6 +84,19 @@ class _addingPageState extends State<addingPage> {
    }
 
 
+   void submit(){
+
+print(voucontroller.text);
+print(traDetcontroller.text);
+print(curpcontroller.text);
+print(selectedProject);
+print(selectedCurType);
+print(selectedDoc);
+print(selectedDateTime);
+
+
+
+   }
 
 
 
@@ -85,6 +104,7 @@ class _addingPageState extends State<addingPage> {
 
 
 
+   final _formKey = GlobalKey<FormState>();
 
   TextEditingController intialdateval = TextEditingController();
   @override
@@ -127,7 +147,7 @@ class _addingPageState extends State<addingPage> {
 
 
               Form(
-
+                  key: _formKey,
                   child:Column(
 
                     children: <Widget>[
@@ -146,9 +166,18 @@ class _addingPageState extends State<addingPage> {
                           firstDate: DateTime.now().add(const Duration(days: 10)),
                           lastDate: DateTime.now().add(const Duration(days: 40)),
                           initialDate: DateTime.now().add(const Duration(days: 20)),
-                          autovalidateMode: AutovalidateMode.always,
 
+                          validator: (value) {
+                            if (value == null ) {
+
+
+                              return 'Please enter date here';
+                            }
+                            return null;
+
+                          },
                           onDateSelected: (DateTime value) {
+                            selectedDateTime = value.toString();
                           },
                         ),
                       ),
@@ -156,12 +185,26 @@ class _addingPageState extends State<addingPage> {
                         padding: const EdgeInsets.all(8),
                         child: TextFormField(
                           keyboardType: TextInputType.number,
+                          controller: voucontroller,
                           decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+
                               labelText: 'Vou Number',
+
                               contentPadding: const EdgeInsets.all(8)),
+                          validator: (value) {
+                            if (value == null || value.isEmpty || value ==0) {
+
+
+                              return 'Please enter vouture number';
+                            }
+                            return null;
+                          },
 
                         ),
                       ),
+
+
+
                       Padding(
                         padding: const EdgeInsets.all(8),
                         child:
@@ -175,9 +218,11 @@ class _addingPageState extends State<addingPage> {
 
                                 items: Docs.map((category) {
                                   return DropdownMenuItem<String>(
-                                    value: category["DocType"],
+
+                                    value: category["doctypeid"],
                                     child: Text(category["DocType"]),
                                   );
+
                                 }).toList(),
                                 onChanged: (String? value) {
                                   setState(() {
@@ -185,6 +230,7 @@ class _addingPageState extends State<addingPage> {
                                     selectedDoc = value!;
                                   });
                                 },
+
                                 value: selectedDoc,
 
                               );
@@ -220,10 +266,18 @@ class _addingPageState extends State<addingPage> {
                       Padding(
                     padding: const EdgeInsets.all(8),
                         child: TextFormField(
+                          controller: traDetcontroller,
+
                           decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                               labelText: 'Transact details',
                               contentPadding: const EdgeInsets.all(8)),
 
+                          validator: (value) {
+                            if (value == null || value.isEmpty || value ==0) {
+                              return 'Please enter the transact details';
+                            }
+                            return null;
+                          },
                         ),
                       ),
                       Padding(
@@ -241,7 +295,7 @@ class _addingPageState extends State<addingPage> {
                                 items: Curs.map((category) {
                                   return DropdownMenuItem<String>(
 
-                                    value: category["CurrencyName"],
+                                    value: category["CurrencyNo"],
                                     child: Text(category["CurrencyName"]),
                                   );
                                 }).toList(),
@@ -289,11 +343,19 @@ class _addingPageState extends State<addingPage> {
                         padding: const EdgeInsets.all(8),
                         child: TextFormField(
                           keyboardType: TextInputType.number,
+                          controller: curpcontroller,
 
                           decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                               labelText: 'Currency Price',
                               contentPadding: const EdgeInsets.all(8)),
+                          validator: (value) {
+                            if (value == null || value.isEmpty || value ==0) {
 
+
+                              return 'Please enter the currency price';
+                            }
+                            return null;
+                          },
                         ),
                       ),
                       Padding(
@@ -307,12 +369,16 @@ class _addingPageState extends State<addingPage> {
                                 isExpanded: true,
                                 hint: const Text("Project Name "),
 
+
                                 items: pros.map((category) {
+
                                   return DropdownMenuItem<String>(
-                                    value: category["projectname"],
+                                    value: category["Projectsno"],
                                     child: Text(category["projectname"]),
                                   );
                                 }).toList(),
+
+
                                 onChanged: (String? value) {
                                   setState(() {
                                     print(value!);
@@ -329,27 +395,32 @@ class _addingPageState extends State<addingPage> {
                           },
                         ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // Validate returns true if the form is valid, or false otherwise.
+                            if (_formKey.currentState!.validate()) {
+                              _formKey.currentState!.save();
+                              submit();
+                              // If the form is valid, display a snackbar. In the real world,
+                              // you'd often call a server or save the information in a database.
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Processing Data')),
 
-
-
-
-
-                      FloatingActionButton(
-                        // When the user presses the button, show an alert dialog containing
-                        // the text that the user has entered into the text field.
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                content: Text("Hello"),
                               );
-                            },
-                          );
-                        },
-                        tooltip: 'Show me the value!',
-                        child: const Icon(Icons.text_fields),
-                      ),  ],))
+                            }
+                          },
+                          child: const Text('Submit'),
+                        ),
+                      ),
+
+
+
+
+
+
+                    ],))
             ])
 
     ));

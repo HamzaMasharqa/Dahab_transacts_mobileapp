@@ -33,7 +33,7 @@ class _IndexPageState extends State<IndexPage> {
   }
 
   void   gettrans() async{
-    var url = "http://172.16.0.22/flutter_php/gettrans.php?i=0";
+    var url = "http://172.16.0.22/flutter_php/getInfo.php?i=0";
     var result = await http.get(Uri.parse(url));
     response = jsonDecode(result.body);
   }
