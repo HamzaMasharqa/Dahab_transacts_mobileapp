@@ -84,17 +84,23 @@ class _addingPageState extends State<addingPage> {
    }
 
 
-   void submit(){
+    submit() async{
+     var url = Uri.parse("http://172.16.0.22/flutter_php/saveinfo.php");
 
-print(voucontroller.text);
-print(traDetcontroller.text);
-print(curpcontroller.text);
-print(selectedProject);
-print(selectedCurType);
-print(selectedDoc);
-print(selectedDateTime);
+     http.post(url,body: {
 
+       "date":selectedDateTime,
+       "vou":voucontroller.text,
+       "tradet":traDetcontroller.text,
+       "prject":curpcontroller.text,
+       "curty":selectedCurType,
+       "docty":selectedDoc,
 
+     });
+     var result = await http.get(url);
+     print("hi");
+
+     print(result.body);
 
    }
 
