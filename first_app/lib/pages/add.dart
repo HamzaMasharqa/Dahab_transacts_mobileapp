@@ -16,23 +16,23 @@ class addingPage extends StatefulWidget {
 }
 
 class _addingPageState extends State<addingPage> {
-   var selectedDoc ;
-   var selectedCurType ;
-   var selectedDateTime ;
+  var selectedDoc ;
+  var selectedCurType ;
+  var selectedDateTime ;
 
-   var selectedProject ;
-   final voucontroller = TextEditingController();
-   final traDetcontroller = TextEditingController();
-   final curpcontroller = TextEditingController();
+  var selectedProject ;
+  final voucontroller = TextEditingController();
+  final traDetcontroller = TextEditingController();
+  final curpcontroller = TextEditingController();
 
 
   var db = Mysql();
   var arr=[];
   List Docs= [];
-   List Curs= [];
-   List pros= [];
+  List Curs= [];
+  List pros= [];
 
-   @override
+  @override
   void initState(){
     super.initState();
 
@@ -46,71 +46,86 @@ class _addingPageState extends State<addingPage> {
 
     var url = "http://172.16.0.22/flutter_php/getInfo.php?i=1";
     var result = await http.get(Uri.parse(url));
-  var  resBody=(jsonDecode(result.body)as List) ;
+    var  resBody=(jsonDecode(result.body)as List) ;
     setState(() {
-    Docs = resBody;
+      Docs = resBody;
     });
 
     return Docs;
 
 
   }
-   Future<List> getCurType() async {
+  Future<List> getCurType() async {
 
-     var url = "http://172.16.0.22/flutter_php/getInfo.php?i=2";
-     var result = await http.get(Uri.parse(url));
-     var resBody=(jsonDecode(result.body)as List) ;
+    var url = "http://172.16.0.22/flutter_php/getInfo.php?i=2";
+    var result = await http.get(Uri.parse(url));
+    var resBody=(jsonDecode(result.body)as List) ;
 
-     setState(() {
-       Curs = resBody;
-     });
-     return Curs;
-
-
-   }
-
-   Future<List> getProject() async {
-
-     var url = "http://172.16.0.22/flutter_php/getInfo.php?i=3";
-     var result = await http.get(Uri.parse(url));
-     var resBody=(jsonDecode(result.body)as List) ;
-
-     setState(() {
-       pros = resBody;
-     });
-     return pros;
+    setState(() {
+      Curs = resBody;
+    });
+    return Curs;
 
 
-   }
+  }
+
+  Future<List> getProject() async {
+
+    var url = "http://172.16.0.22/flutter_php/getInfo.php?i=3";
+    var result = await http.get(Uri.parse(url));
+    var resBody=(jsonDecode(result.body)as List) ;
+
+    setState(() {
+      pros = resBody;
+    });
+    return pros;
 
 
-    submit() async{
-     var url = Uri.parse("http://172.16.0.22/flutter_php/saveinfo.php");
-
-     http.post(url,body: {
-
-       "date":selectedDateTime,
-       "vou":voucontroller.text,
-       "tradet":traDetcontroller.text,
-       "prject":curpcontroller.text,
-       "curty":selectedCurType,
-       "docty":selectedDoc,
-
-     });
-     var result = await http.get(url);
-     print("hi");
-
-     print(result.body);
-
-   }
+  }
 
 
+  submit() async{
+ var url = Uri.parse("http://172.16.0.22/flutter_php/saveinfo.php?date="+selectedDateTime+"&vou="
+        +voucontroller.text+"&tradet="+traDetcontroller.text+"&prject="+selectedProject+"&curty="+selectedCurType+"&docty="+selectedDoc);
+ var result = await http.get(url);
+
+ print(result.body);
+
+if(result.statusCode == 200){
+  Navigator.of(context).pushNamedAndRemoveUntil( "IndexPage", (route) => false);
+}else{
+  print("saving fail");
+}
+
+
+/*   var map = new Map<String, dynamic>();
+    map['date'] = selectedDateTime;
+    map['vou'] = voucontroller.text;
+    map['tradet'] = traDetcontroller.text;
+
+    map['prject'] = curpcontroller.text;
+    map['curty'] = selectedCurType;
+    map['docty'] = selectedDoc;
+
+
+
+
+   await http.post(url,body:map);
+    var result = await http.get(url);
+    print("hi");
+
+    print(result.body);*/
+
+
+  }
 
 
 
 
 
-   final _formKey = GlobalKey<FormState>();
+
+
+  final _formKey = GlobalKey<FormState>();
 
   TextEditingController intialdateval = TextEditingController();
   @override
@@ -261,16 +276,14 @@ class _addingPageState extends State<addingPage> {
                           },
                           items: items.map((Category){
                             value: Category["DocType"],
-
                             return DropdownMenuItem(child: Text("DocType")).
-
                           }).toList();
                         ),*/
 
 
                       ),
                       Padding(
-                    padding: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(8),
                         child: TextFormField(
                           controller: traDetcontroller,
 
@@ -337,9 +350,7 @@ class _addingPageState extends State<addingPage> {
                           },
                           items: items.map((Category){
                             value: Category["DocType"],
-
                             return DropdownMenuItem(child: Text("DocType")).
-
                           }).toList();
                         ),*/
 
