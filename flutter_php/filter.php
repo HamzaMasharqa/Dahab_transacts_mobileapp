@@ -1,4 +1,4 @@
-<?
+<?php
 function filterReqest($request){
 	
 	

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 
 import 'package:date_field/date_field.dart';
 import 'package:flutter/cupertino.dart';
@@ -85,7 +86,16 @@ class _addingPageState extends State<addingPage> {
 
 
   submit() async{
- var url = Uri.parse("http://172.16.0.22/flutter_php/saveinfo.php?date="+selectedDateTime+"&vou="
+
+
+    String url = "http://172.16.0.22/flutter_php/saveinfo.php";
+
+
+
+
+
+
+/*  var url = Uri.parse("http://172.16.0.22/flutter_php/saveinfo.php?date="+selectedDateTime+"&vou="
         +voucontroller.text+"&tradet="+traDetcontroller.text+"&prject="+selectedProject+"&curty="+selectedCurType+"&docty="+selectedDoc);
  var result = await http.get(url);
 
@@ -95,10 +105,10 @@ if(result.statusCode == 200){
   Navigator.of(context).pushNamedAndRemoveUntil( "IndexPage", (route) => false);
 }else{
   print("saving fail");
-}
+}*/
 
 
-/*   var map = new Map<String, dynamic>();
+  var map = new Map<String, dynamic>();
     map['date'] = selectedDateTime;
     map['vou'] = voucontroller.text;
     map['tradet'] = traDetcontroller.text;
@@ -110,11 +120,11 @@ if(result.statusCode == 200){
 
 
 
-   await http.post(url,body:map);
-    var result = await http.get(url);
-    print("hi");
+    var res =  await http.post(Uri.parse(Uri.encodeFull(url)),headers: {"Accept":"application/json"},body:map);
 
-    print(result.body);*/
+    var resbo = json.decode(res.body);
+
+
 
 
   }
@@ -424,6 +434,7 @@ if(result.statusCode == 200){
                               // you'd often call a server or save the information in a database.
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(content: Text('Processing Data')),
+
 
                               );
                             }

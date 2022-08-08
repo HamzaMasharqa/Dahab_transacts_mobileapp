@@ -54,7 +54,6 @@ class _IndexPageState extends State<IndexPage> {
       ),
       onPressed: () {
         Future.delayed(Duration(seconds: 2));
-        print("Hi");
         setState(() {
           this.gettrans();
 
@@ -169,7 +168,6 @@ var transacrDet = item['TraDetails'];
 
     return Card(
         child: Slidable(
-          // Specify a key if the Slidable is dismissible.
 
           // The start action pane is the one at the left or the top side.
           startActionPane:  ActionPane(
@@ -180,13 +178,14 @@ var transacrDet = item['TraDetails'];
             children: [
               // A SlidableAction can have an icon and/or a label.
               SlidableAction(
-                onPressed: deletTransact(),
+                onPressed: (context){deletTransact(transacrNO);},
                 backgroundColor: Color(0xFFFE4A49),
                 foregroundColor: Colors.white,
                 icon: Icons.delete,
 
                 label: 'Delete',
               ),
+
               SlidableAction(
                 onPressed: null,
                 backgroundColor: Color(0xFF21B7CA),
@@ -224,13 +223,55 @@ var transacrDet = item['TraDetails'];
         ),
     );
   }
+   void deletTransact(String id) {
+     showDialog(
+         context: context,
+         builder: (BuildContext context) {
+           return AlertDialog(
+             title: const Text('Delete?'),
+             content: const Text('Are you sure you want to delete this item?'),
+             actions: [
+               ElevatedButton(
+                   style: ElevatedButton.styleFrom(primary: Colors.green),
+                   onPressed: () {
+                     Navigator.pop(context);
+                   },
+                   child: const Text('No')),
+               ElevatedButton(
+                   style: ElevatedButton.styleFrom(primary: Colors.red),
+                   onPressed: () async {
+                     var url = "http://172.16.0.22/flutter_php/delete.php?id="+id;
+                     var result = await http.get(Uri.parse(url));
+                     response = json.decode(result.body);
 
+                     Navigator.pushAndRemoveUntil(
+                       context,
+                       MaterialPageRoute(builder: (context) => IndexPage()), // this mymainpage is your page to refresh
+                           (Route<dynamic> route) => false,
+                     );
+                     Future.delayed(Duration(seconds: 2));
+                     print("Hi");
 
-  deletTransact() {
-  print("delete");
+                     setState(() {
+                       this.gettrans();
+
+                     });
+
+},
+                   child: const Text(
+                     'Delete',
+                   )),
+             ],
+           );
+         });
 
 
   }
+
+
+
+
+
 
   editTransact() {    print("edit");
 
