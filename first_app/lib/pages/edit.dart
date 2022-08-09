@@ -8,15 +8,15 @@ import 'package:http/http.dart' as http;
 
 import '../mysql.dart';
 
-class addingPage extends StatefulWidget {
-  const addingPage({Key? key}) : super(key: key);
+class editingPage extends StatefulWidget {
+  const editingPage({Key? key}) : super(key: key);
 
 
   @override
-  _addingPageState createState() => _addingPageState();
+  _editingPageState createState() => _editingPageState();
 }
 
-class _addingPageState extends State<addingPage> {
+class _editingPageState extends State<editingPage> {
   var selectedDoc ;
   var selectedCurType ;
   var selectedDateTime ;
@@ -95,6 +95,18 @@ class _addingPageState extends State<addingPage> {
 
 
 
+/*  var url = Uri.parse("http://172.16.0.22/flutter_php/saveinfo.php?date="+selectedDateTime+"&vou="
+        +voucontroller.text+"&tradet="+traDetcontroller.text+"&prject="+selectedProject+"&curty="+selectedCurType+"&docty="+selectedDoc);
+ var result = await http.get(url);
+
+ print(result.body);
+
+if(result.statusCode == 200){
+  Navigator.of(context).pushNamedAndRemoveUntil( "IndexPage", (route) => false);
+}else{
+  print("saving fail");
+}*/
+
 
   var map = new Map<String, dynamic>();
     map['date'] = selectedDateTime;
@@ -131,7 +143,7 @@ class _addingPageState extends State<addingPage> {
 
     return Directionality(textDirection: TextDirection.rtl, child: Scaffold(
         appBar: AppBar(
-          title: const Text('Add Transact'),
+          title: const Text('Edit Transact'),
           actions: <Widget>[
             IconButton(
               icon: const Icon(
@@ -142,7 +154,7 @@ class _addingPageState extends State<addingPage> {
               onPressed: () {
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => addingPage()), // this mymainpage is your page to refresh
+                  MaterialPageRoute(builder: (context) => editingPage()), // this mymainpage is your page to refresh
                       (Route<dynamic> route) => false,
                 );
                 Future.delayed(Duration(seconds: 2));
