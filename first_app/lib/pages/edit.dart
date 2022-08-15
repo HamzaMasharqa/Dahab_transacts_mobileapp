@@ -9,9 +9,9 @@ import 'package:http/http.dart' as http;
 import '../mysql.dart';
 
 class editingPage extends StatefulWidget {
-  const editingPage({Key? key}) : super(key: key);
+final Map ss;
 
-
+editingPage(this.ss);
   @override
   _editingPageState createState() => _editingPageState();
 }
@@ -22,20 +22,24 @@ class _editingPageState extends State<editingPage> {
   var selectedDateTime ;
 
   var selectedProject ;
-  final voucontroller = TextEditingController();
+  final voucontroller = TextEditingController( );
   final traDetcontroller = TextEditingController();
   final curpcontroller = TextEditingController();
 
 
   var db = Mysql();
   var arr=[];
-  List Docs= [];
-  List Curs= [];
-  List pros= [];
-
+  List Docs = [];
+  List Curs = [];
+  List pros = [];
+  late Map  inserted;
   @override
   void initState(){
     super.initState();
+   inserted = widget.ss;
+    voucontroller.text = inserted["VouNo"];
+    traDetcontroller.text = inserted["TraDetails"];
+    curpcontroller.text = inserted["CurP"];
 
   }
 
@@ -87,13 +91,19 @@ class _editingPageState extends State<editingPage> {
 
   submit() async{
 
-
-    String url = "http://172.16.0.22/flutter_php/saveinfo.php";
-
+    Navigator.pop(context);
 
 
 
 
+    Future.delayed(const Duration(seconds: 2));
+
+    String url = "http://172.16.0.22/flutter_php/update.php?id="+inserted["trano"];
+
+
+
+
+print(url);
 
 /*  var url = Uri.parse("http://172.16.0.22/flutter_php/saveinfo.php?date="+selectedDateTime+"&vou="
         +voucontroller.text+"&tradet="+traDetcontroller.text+"&prject="+selectedProject+"&curty="+selectedCurType+"&docty="+selectedDoc);
@@ -112,8 +122,9 @@ if(result.statusCode == 200){
     map['date'] = selectedDateTime;
     map['vou'] = voucontroller.text;
     map['tradet'] = traDetcontroller.text;
+    map['curp'] = curpcontroller.text;
 
-    map['prject'] = curpcontroller.text;
+    map['project'] = selectedProject;
     map['curty'] = selectedCurType;
     map['docty'] = selectedDoc;
 
@@ -123,7 +134,7 @@ if(result.statusCode == 200){
     var res =  await http.post(Uri.parse(Uri.encodeFull(url)),headers: {"Accept":"application/json"},body:map);
 
     var resbo = json.decode(res.body);
-
+print(res.body);
 
 
 
@@ -152,11 +163,6 @@ if(result.statusCode == 200){
                 color: Colors.black,
               ),
               onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => editingPage()), // this mymainpage is your page to refresh
-                      (Route<dynamic> route) => false,
-                );
                 Future.delayed(Duration(seconds: 2));
                 print("Hi");
 
@@ -217,9 +223,11 @@ if(result.statusCode == 200){
                         child: TextFormField(
                           keyboardType: TextInputType.number,
                           controller: voucontroller,
-                          decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
 
+                          decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                              hintText: 'Enter a vouture number here',
                               labelText: 'Vou Number',
+
 
                               contentPadding: const EdgeInsets.all(8)),
                           validator: (value) {
@@ -418,7 +426,7 @@ if(result.statusCode == 200){
 
                               );
                             }
-                            return Center(child: CircularProgressIndicator());
+                            return const Center(child: CircularProgressIndicator());
                           },
                         ),
                       ),
@@ -439,7 +447,7 @@ if(result.statusCode == 200){
                               );
                             }
                           },
-                          child: const Text('Submit'),
+                          child: const Text('UPDATE'),
                         ),
                       ),
 

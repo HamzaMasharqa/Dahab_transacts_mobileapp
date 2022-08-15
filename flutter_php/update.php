@@ -1,6 +1,7 @@
 <?php
-
 include 'conn.php';
+$updateId = $_GET['id'];
+
  $date= $_POST['date'];
  $vou = $_POST['vou'];
  $tradet = $_POST['tradet'];
@@ -8,7 +9,7 @@ include 'conn.php';
  $curty = $_POST['curty'];
  $docty = $_POST['docty'];
  $curp = $_POST['curp'];
-
+ 
  
  echo $date;
  echo "//";
@@ -25,7 +26,13 @@ include 'conn.php';
  echo "//";
 
  echo $docty;
- 
-$connection->query("INSERT INTO transacts (trano, TraDate, VouNo,BillId,CurP,TraDetails,currency,Project,UserNo,created_at,updated_at) VALUES 
-('[value-3]','[value-3]' ,'.$vou.',  '.$docty.', '.$curp.', '.$tradet.', '.$curty.','.$project.' , '[value-6]', '[value-6]', '[value-6]')");
+
+
+ $connection->query("UPDATE transacts SET TraDate='[value-6]',
+VouNo='".$vou."',BillId= '".$docty."',CurP='".$curp."',TraDetails='".$tradet."',
+currency='.$curty.',Project='$project',UserNo='[value-9]',created_at='[value-10]',
+updated_at='[value-11]' WHERE trano = '".$updateId."';");
+
+
+
 ?>

@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:async';
 
 import 'package:date_field/date_field.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -88,10 +87,20 @@ class _addingPageState extends State<addingPage> {
   submit() async{
 
 
+    Navigator.pop(context);
+
+
+
+
+    Future.delayed(const Duration(seconds: 2));
+
+
+
+
     String url = "http://172.16.0.22/flutter_php/saveinfo.php";
 
 
-
+print(url);
 
 
 
@@ -100,8 +109,9 @@ class _addingPageState extends State<addingPage> {
     map['date'] = selectedDateTime;
     map['vou'] = voucontroller.text;
     map['tradet'] = traDetcontroller.text;
+    map['curp'] = curpcontroller.text;
 
-    map['prject'] = curpcontroller.text;
+    map['project'] = selectedProject;
     map['curty'] = selectedCurType;
     map['docty'] = selectedDoc;
 
@@ -112,7 +122,7 @@ class _addingPageState extends State<addingPage> {
 
     var resbo = json.decode(res.body);
 
-
+print(resbo);
 
 
   }

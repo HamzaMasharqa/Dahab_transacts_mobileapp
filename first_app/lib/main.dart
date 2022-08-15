@@ -7,6 +7,6 @@ void main() => runApp(
         primarySwatch: Colors.amber,
       ),
       debugShowCheckedModeBanner: false,
-      home:  IndexPage(),
+      home:  const IndexPage(),
     )
 );
