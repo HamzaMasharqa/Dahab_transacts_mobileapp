@@ -27,11 +27,12 @@ $updateId = $_GET['id'];
 
  echo $docty;
 
+$now = date_create()->format('Y-m-d H:i:s');
 
- $connection->query("UPDATE transacts SET TraDate='[value-6]',
+ $connection->query("UPDATE transacts SET TraDate='$date',
 VouNo='".$vou."',BillId= '".$docty."',CurP='".$curp."',TraDetails='".$tradet."',
-currency='.$curty.',Project='$project',UserNo='[value-9]',created_at='[value-10]',
-updated_at='[value-11]' WHERE trano = '".$updateId."';");
+currency='.$curty.',Project='$project',UserNo='[value-9]',
+updated_at='$now' WHERE trano = '".$updateId."';");
 
 
 

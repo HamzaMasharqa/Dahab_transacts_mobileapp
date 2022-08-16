@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'dart:async';
-
+import 'package:first_app/pages/index.dart';
 import 'package:date_field/date_field.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -91,19 +90,16 @@ class _editingPageState extends State<editingPage> {
 
   submit() async{
 
-    Navigator.pop(context);
 
-
-
-
-    Future.delayed(const Duration(seconds: 2));
 
     String url = "http://172.16.0.22/flutter_php/update.php?id="+inserted["trano"];
 
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Processing Data')),
+    );
+    Navigator.push(context, MaterialPageRoute(builder: (context)=> IndexPage(),),);
 
 
-
-print(url);
 
 /*  var url = Uri.parse("http://172.16.0.22/flutter_php/saveinfo.php?date="+selectedDateTime+"&vou="
         +voucontroller.text+"&tradet="+traDetcontroller.text+"&prject="+selectedProject+"&curty="+selectedCurType+"&docty="+selectedDoc);
@@ -123,7 +119,6 @@ if(result.statusCode == 200){
     map['vou'] = voucontroller.text;
     map['tradet'] = traDetcontroller.text;
     map['curp'] = curpcontroller.text;
-
     map['project'] = selectedProject;
     map['curty'] = selectedCurType;
     map['docty'] = selectedDoc;
@@ -214,8 +209,10 @@ print(res.body);
 
                           },
                           onDateSelected: (DateTime value) {
-                            selectedDateTime = value.toString();
-                          },
+                            final splitted = value.toString().split('.');
+                            selectedDateTime = splitted[0];
+                            print(selectedDateTime);
+                            },
                         ),
                       ),
                       Padding(

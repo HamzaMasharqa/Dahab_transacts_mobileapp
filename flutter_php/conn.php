@@ -1,6 +1,5 @@
 <?php
 
-include 'filter.php';
 $connection = mysqli_connect("localhost", "root", "", "dahabac");
 if(!$connection)
 {

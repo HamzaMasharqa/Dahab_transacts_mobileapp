@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:async';
 
 import 'package:date_field/date_field.dart';
+import 'package:first_app/pages/index.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -87,20 +88,19 @@ class _addingPageState extends State<addingPage> {
   submit() async{
 
 
-    Navigator.pop(context);
 
 
 
-
-    Future.delayed(const Duration(seconds: 2));
 
 
 
 
     String url = "http://172.16.0.22/flutter_php/saveinfo.php";
 
-
-print(url);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Processing Data')),
+    );
+    Navigator.push(context, MaterialPageRoute(builder: (context)=> IndexPage(),),);
 
 
 
@@ -123,7 +123,6 @@ print(url);
     var resbo = json.decode(res.body);
 
 print(resbo);
-
 
   }
 
@@ -206,7 +205,8 @@ print(resbo);
 
                           },
                           onDateSelected: (DateTime value) {
-                            selectedDateTime = value.toString();
+                            final splitted = value.toString().split('.');
+                            selectedDateTime = splitted[0];
                           },
                         ),
                       ),
@@ -432,20 +432,12 @@ print(resbo);
                               // you'd often call a server or save the information in a database.
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(content: Text('Processing Data')),
-
-
                               );
                             }
                           },
                           child: const Text('Submit'),
                         ),
                       ),
-
-
-
-
-
-
                     ],))
             ])
 

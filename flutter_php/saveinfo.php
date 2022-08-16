@@ -1,18 +1,32 @@
 <?php
-
 include 'conn.php';
- $date= $_POST['date'];
- $vou = $_POST['vou'];
- $tradet = $_POST['tradet'];
- $project= $_POST['project'];
- $curty = $_POST['curty'];
- $docty = $_POST['docty'];
- $curp = $_POST['curp'];
 
- 
+$sql = $connection->query("SELECT max(trano) FROM transacts");
+
+
+$tra = array();
+
+while($row=$sql->fetch_assoc()){
+	
+	$tra[]=$row;
+	
+}
+
+$id = $tra[0]['max(trano)'] +1;
+
+$date = $_POST['date'];
+
+$vou = $_POST['vou'];
+$tradet = $_POST['tradet'];
+$project = $_POST['project'];
+$curty = $_POST['curty'];
+$docty = $_POST['docty'];
+$curp = $_POST['curp'];
  echo $date;
  echo "//";
  echo $vou;
+  echo "//";
+ echo $id;
   echo "//";
 
  echo $tradet;
@@ -23,9 +37,10 @@ include 'conn.php';
 
  echo $curty;
  echo "//";
+$now = date_create()->format('Y-m-d H:i:s');
 
- echo $docty;
- 
+
 $connection->query("INSERT INTO transacts (trano, TraDate, VouNo,BillId,CurP,TraDetails,currency,Project,UserNo,created_at,updated_at) VALUES 
-('[value-3]','[value-3]' ,'.$vou.',  '.$docty.', '.$curp.', '.$tradet.', '.$curty.','.$project.' , '[value-6]', '[value-6]', '[value-6]')");
+('.$id.','$date' ,'.$vou.',  '.$docty.', '.$curp.', '$tradet', '.$curty.','.$project.' , '[value-6]', '$now', '$now')");
+
 ?>
