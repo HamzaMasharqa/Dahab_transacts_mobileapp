@@ -71,7 +71,6 @@ class _addingPageState extends State<addingPage> {
   }
 
   Future<List> getProject() async {
-
     var url = "http://172.16.0.22/flutter_php/getInfo.php?i=3";
     var result = await http.get(Uri.parse(url));
     var resBody=(jsonDecode(result.body)as List) ;
@@ -122,7 +121,6 @@ class _addingPageState extends State<addingPage> {
 
     var resbo = json.decode(res.body);
 
-print(resbo);
 
   }
 
@@ -155,7 +153,6 @@ print(resbo);
                       (Route<dynamic> route) => false,
                 );
                 Future.delayed(Duration(seconds: 2));
-                print("Hi");
 
                 setState(() {
                   this.getDoc();

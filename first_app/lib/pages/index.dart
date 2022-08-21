@@ -29,10 +29,11 @@ class _IndexPageState extends State<IndexPage> {
     this.getTrans();
   }
 
-  Future getTrans() async {
+  Future getTrans()  async {
     var url = "http://172.16.0.22/flutter_php/getInfo.php?i=0";
     var result = await http.get(Uri.parse(url));
     response = jsonDecode(result.body);
+
   }
 
   @override
@@ -168,7 +169,6 @@ class _IndexPageState extends State<IndexPage> {
                   icon: Icons.delete,
                   label: 'Delete',
                 ),
-
                 const SlidableAction(
                   onPressed: null,
                   backgroundColor: Color(0xFF21B7CA),
@@ -176,6 +176,7 @@ class _IndexPageState extends State<IndexPage> {
                   icon: Icons.share,
                   label: 'Share',
                 ),
+
               ],
             ),
 
@@ -250,10 +251,8 @@ class _IndexPageState extends State<IndexPage> {
               ElevatedButton(
                   style: ElevatedButton.styleFrom(primary: Colors.green),
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Processing Data')),
-                    );
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=> const IndexPage(),),);
+                    Navigator.pop(context);
+
                   },
                   child: const Text('No')),
               ElevatedButton(

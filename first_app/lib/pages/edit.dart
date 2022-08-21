@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:async';
+import 'dart:ffi';
 import 'package:first_app/pages/index.dart';
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,8 @@ class _editingPageState extends State<editingPage> {
     voucontroller.text = inserted["VouNo"];
     traDetcontroller.text = inserted["TraDetails"];
     curpcontroller.text = inserted["CurP"];
-
+    selectedDateTime = inserted["Project"];
+    print(inserted["Project"]);
   }
 
 
@@ -51,8 +53,11 @@ class _editingPageState extends State<editingPage> {
     var url = "http://172.16.0.22/flutter_php/getInfo.php?i=1";
     var result = await http.get(Uri.parse(url));
     var  resBody=(jsonDecode(result.body)as List) ;
+
     setState(() {
-      Docs = resBody;
+
+Docs= resBody;
+
     });
 
     return Docs;
@@ -334,16 +339,16 @@ print(res.body);
                                   );
                                 }).toList(),
                                 onChanged: (String? value) {
+
+
                                   setState(() {
                                     print(value!);
-
                                     selectedCurType = value;
                                   });
-
                                 },
                                 value: selectedCurType,
-
                               );
+
                             }
                             return Center(child: CircularProgressIndicator());
                           },

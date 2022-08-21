@@ -22,21 +22,7 @@ $project = $_POST['project'];
 $curty = $_POST['curty'];
 $docty = $_POST['docty'];
 $curp = $_POST['curp'];
- echo $date;
- echo "//";
- echo $vou;
-  echo "//";
- echo $id;
-  echo "//";
 
- echo $tradet;
- echo "//";
-
- echo $project;
- echo "//";
-
- echo $curty;
- echo "//";
 $now = date_create()->format('Y-m-d H:i:s');
 
 
